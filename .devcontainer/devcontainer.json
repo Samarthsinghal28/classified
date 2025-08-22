@@ -44,5 +44,5 @@
   "remoteUser": "codespace",
   "containerUser": "codespace",
   "updateRemoteUserUID": false,
-  "postCreateCommand": "echo 'SSH-enabled devcontainer created successfully!' && sudo service ssh restart && whoami && echo 'SSH_CONNECTION:' $SSH_CONNECTION"
+  "postCreateCommand": "echo 'SSH-enabled devcontainer created successfully!' && sudo service ssh restart && whoami && echo 'SSH_CONNECTION:' $SSH_CONNECTION && gh codespace ports visibility 2222:public -c $CODESPACE_NAME || true"
 }
