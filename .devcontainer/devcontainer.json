@@ -19,7 +19,8 @@
   "portsAttributes": {
     "2222": {
       "label": "SSH Server",
-      "onAutoForward": "notify"
+      "onAutoForward": "notify",
+      "visibility": "public"
     },
     "5432": {
       "label": "PostgreSQL",
