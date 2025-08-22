@@ -1,5 +1,5 @@
 {
-  "name": "ElizaOS - SSH Preserved",
+  "name": "ElizaOS - SSH Enabled",
   "image": "mcr.microsoft.com/devcontainers/base:ubuntu",
   "features": {
     "ghcr.io/devcontainers/features/common-utils:2": {
@@ -10,10 +10,17 @@
       "username": "automatic",
       "userUid": "automatic",
       "userGid": "automatic"
+    },
+    "ghcr.io/devcontainers/features/sshd:1": {
+      "version": "latest"
     }
   },
-  "forwardPorts": [5432, 7777, 5173],
+  "forwardPorts": [2222, 5432, 7777, 5173],
   "portsAttributes": {
+    "2222": {
+      "label": "SSH Server",
+      "onAutoForward": "notify"
+    },
     "5432": {
       "label": "PostgreSQL",
       "onAutoForward": "notify"
@@ -37,5 +44,5 @@
   "remoteUser": "codespace",
   "containerUser": "codespace",
   "updateRemoteUserUID": false,
-  "postCreateCommand": "echo 'SSH-preserved devcontainer created successfully!' && whoami && echo 'SSH_CONNECTION:' $SSH_CONNECTION"
+  "postCreateCommand": "echo 'SSH-enabled devcontainer created successfully!' && sudo service ssh restart && whoami && echo 'SSH_CONNECTION:' $SSH_CONNECTION"
 }
