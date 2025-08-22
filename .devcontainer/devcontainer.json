@@ -1,0 +1,41 @@
+{
+  "name": "ElizaOS - SSH Preserved",
+  "image": "mcr.microsoft.com/devcontainers/base:ubuntu",
+  "features": {
+    "ghcr.io/devcontainers/features/common-utils:2": {
+      "installZsh": false,
+      "configureZshAsDefaultShell": false,
+      "installOhMyZsh": false,
+      "upgradePackages": false,
+      "username": "automatic",
+      "userUid": "automatic",
+      "userGid": "automatic"
+    }
+  },
+  "forwardPorts": [5432, 7777, 5173],
+  "portsAttributes": {
+    "5432": {
+      "label": "PostgreSQL",
+      "onAutoForward": "notify"
+    },
+    "7777": {
+      "label": "AgentServer API",
+      "onAutoForward": "notify"
+    },
+    "5173": {
+      "label": "Game Frontend",
+      "onAutoForward": "notify"
+    }
+  },
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "ms-ossdata.vscode-postgresql"
+      ]
+    }
+  },
+  "remoteUser": "codespace",
+  "containerUser": "codespace",
+  "updateRemoteUserUID": false,
+  "postCreateCommand": "echo 'SSH-preserved devcontainer created successfully!' && whoami && echo 'SSH_CONNECTION:' $SSH_CONNECTION"
+}
