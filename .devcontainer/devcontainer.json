@@ -10,10 +10,18 @@
       "username": "automatic",
       "userUid": "automatic",
       "userGid": "automatic"
-    }
+    },
+    "ghcr.io/devcontainers/features/sshd:1": {
+      "version": "latest"
+    },
+    "ghcr.io/devcontainers/features/github-cli:1": {}
   },
-  "forwardPorts": [5432, 7777, 5173],
+  "forwardPorts": [2222, 5432, 7777, 5173],
   "portsAttributes": {
+    "2222": {
+      "label": "SSH Server",
+      "onAutoForward": "notify"
+    },
     "5432": {
       "label": "PostgreSQL",
       "onAutoForward": "notify"
@@ -37,5 +45,5 @@
   "remoteUser": "codespace",
   "containerUser": "codespace",
   "updateRemoteUserUID": false,
-  "postCreateCommand": "echo 'SSH-preserved devcontainer created successfully!' && whoami && echo 'SSH_CONNECTION:' $SSH_CONNECTION"
+  "postCreateCommand": "echo 'SSH-enabled devcontainer created successfully!'"
 }
