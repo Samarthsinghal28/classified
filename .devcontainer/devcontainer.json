@@ -45,5 +45,5 @@
   "remoteUser": "codespace",
   "containerUser": "codespace",
   "updateRemoteUserUID": false,
-  "postCreateCommand": "echo 'SSH-enabled devcontainer created successfully!'"
+  "postCreateCommand": "sudo service postgresql start && sudo -u postgres psql -c \"CREATE ROLE eliza WITH LOGIN PASSWORD 'eliza_secure_pass' CREATEDB;\" && sudo -u postgres psql -c \"CREATE DATABASE eliza OWNER eliza;\" && sudo -u postgres psql -d eliza -c \"CREATE EXTENSION IF NOT EXISTS \\\"uuid-ossp\\\";\" && sudo -u postgres psql -d eliza -c \"CREATE EXTENSION IF NOT EXISTS \\\"pg_trgm\\\";\" || true"
 }
