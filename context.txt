@@ -1,0 +1,113 @@
+First of all lets look at folder structure. Firstly you’ll need to create a .devcontainer folder and add three files in it.
+
+Inside main project:
+
+Press enter or click to view image in full size
+
+Inside .devcontainer folder:
+
+Press enter or click to view image in full size
+
+To run a PostgreSQL server using a devcontainer in GitHub Codespaces, you can configure your environment by setting up these 3 files. Here’s how you can do it:
+
+1. Set Up the `devcontainer.json` File
+
+This file configures your development environment, including the PostgreSQL service.
+
+Create a `.devcontainer/devcontainer.json` file with the following content:
+
+json
+{
+ "name": "Python & PostgreSQL Dev Container",
+ "dockerComposeFile": "docker-compose.yml",
+ "service": "app",
+ "workspaceFolder": "/workspace",
+ "extensions": [
+ "ms-python.python",
+ "ms-azuretools.vscode-docker",
+ "ms-vscode-remote.remote-containers"
+ ],
+ "forwardPorts": [5432],
+ "postCreateCommand": "pip install -r requirements.txt",
+ "settings": {
+ "terminal.integrated.shell.linux": "/bin/bash"
+ }
+}
+2. Create a `docker-compose.yml` File
+
+This file defines the services (like PostgreSQL) you want to run in your container.
+
+Create a `.devcontainer/docker-compose.yml` file with the following content:
+
+yaml
+version: '3.8'
+services:
+ app:
+ build:
+ context: ..
+ dockerfile: .devcontainer/Dockerfile
+ volumes:
+ - ..:/workspace:cached
+ command: sleep infinity
+ network_mode: service:db
+db:
+ image: postgres:latest
+ restart: unless-stopped
+ environment:
+ POSTGRES_USER: postgres
+ POSTGRES_PASSWORD: postgres
+ POSTGRES_DB: mydatabase
+ ports:
+ - "5432:5432"
+ volumes:
+ - postgres-data:/var/lib/postgresql/data
+volumes:
+ postgres-data:
+3. Create a `Dockerfile`
+
+Get Mandip Sapkota’s stories in your inbox
+Join Medium for free to get updates from this writer.
+
+Enter your email
+Subscribe
+The Dockerfile sets up the environment where your application runs.
+
+Create a `.devcontainer/Dockerfile` file with the following content:
+
+Dockerfile
+FROM mcr.microsoft.com/devcontainers/python:3.11-bullseye
+# Install PostgreSQL client tools (optional, if you want to interact with PostgreSQL from your app container)
+RUN apt-get update && apt-get install -y postgresql-client
+# Set up your environment (optional)
+ENV PYTHONUNBUFFERED 1
+4. Build and Run the Dev Container
+
+Once you’ve set up the `devcontainer.json`, `docker-compose.yml`, and `Dockerfile`, you can start your dev container:
+
+1. Open the Command Palette in VS Code (`Ctrl+Shift+P` or `Cmd+Shift+P` on macOS).
+2. Search for `Remote-Containers: Reopen in Container`.
+3. VS Code will rebuild the container using the configuration files, and it will set up the PostgreSQL service inside the container.
+
+5. Connect to PostgreSQL
+
+Once your container is running, you can connect to the PostgreSQL database using the following command from within the dev container terminal:
+
+bash
+psql -h db -U postgres -d mydatabase
+- `-h db`: Connects to the `db` service defined in your `docker-compose.yml`.
+- `-U postgres`: Uses the `postgres` user.
+- `-d mydatabase`: Connects to the `mydatabase` database.
+
+6. Access PostgreSQL from Your Application
+
+You can configure your application to connect to PostgreSQL using the following credentials:
+
+- **Host**: `db`
+- **Port**: `5432`
+- **User**: `postgres`
+- **Password**: `postgres`
+- **Database**: `mydatabase`
+
+Summary
+
+By setting up a `devcontainer.json` with a Docker Compose configuration, you can run a PostgreSQL server in GitHub Codespaces. This setup allows you to work with a full development environment, including your database, without needing to install anything on your local machine.

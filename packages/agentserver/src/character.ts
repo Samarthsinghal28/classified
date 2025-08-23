@@ -107,12 +107,12 @@ You should be autonomous when enabled, setting your own goals and tasks, but als
 
   // Agent configuration
   settings: {
-    // Database configuration for containerized environment (hardcoded)
-    DATABASE_URL: 'postgresql://eliza:eliza_secure_pass@postgres:5432/eliza',
-    POSTGRES_URL: 'postgresql://eliza:eliza_secure_pass@postgres:5432/eliza',
+    // Database configuration for containerized environment (from environment)
+    DATABASE_URL: process.env.DATABASE_URL || 'postgresql://eliza:eliza_secure_pass@postgres:5432/eliza',
+    POSTGRES_URL: process.env.POSTGRES_URL || 'postgresql://eliza:eliza_secure_pass@postgres:5432/eliza',
     // Force PostgreSQL in containerized environment
-    USE_POSTGRESQL: true,
-    DISABLE_PGLITE: true,
+    USE_POSTGRESQL: process.env.USE_POSTGRESQL === 'true',
+    DISABLE_PGLITE: process.env.DISABLE_PGLITE === 'true',
     // Autonomy configuration - enable continuous self-directed thinking
     AUTONOMY_ENABLED: false,
     AUTONOMY_AUTO_START: false,

@@ -218,20 +218,41 @@ export async function startAgent(character: Character): Promise<IAgentRuntime> {
 }
 
 export async function startServer() {
-  // Check for existing database URL in environment variables first
-  const envDatabaseUrl = process.env.POSTGRES_URL || process.env.DATABASE_URL;
-
-  // Use localhost for local development, eliza-postgres for container environments
-  const isContainer =
-    process.env.CONTAINER === 'true' ||
-    process.env.AGENT_CONTAINER === 'true' ||
-    process.env.DOCKER_CONTAINER === 'true' ||
-    fs.existsSync('/.dockerenv');
-  const postgresHost = isContainer ? 'eliza-postgres:5432' : 'localhost:5432';
-  const fallbackDatabaseUrl = `postgresql://eliza:eliza_secure_pass@${postgresHost}/eliza`;
-
-  // Use environment variable if set, otherwise use fallback
-  const databaseUrl = envDatabaseUrl || fallbackDatabaseUrl;
+  // Check database configuration from environment
+  const usePostgresql = process.env.USE_POSTGRESQL === 'true';
+  const disablePglite = process.env.DISABLE_PGLITE === 'true';
+  
+  console.log('[DEBUG] Environment variables:');
+  console.log('[DEBUG] USE_POSTGRESQL:', process.env.USE_POSTGRESQL);
+  console.log('[DEBUG] DISABLE_PGLITE:', process.env.DISABLE_PGLITE);
+  console.log('[DEBUG] usePostgresql:', usePostgresql);
+  console.log('[DEBUG] disablePglite:', disablePglite);
+  
+  let databaseUrl: string;
+  
+  if (usePostgresql && !disablePglite) {
+    // Use PostgreSQL if explicitly enabled
+    const envDatabaseUrl = process.env.POSTGRES_URL || process.env.DATABASE_URL;
+    
+    // Use localhost for local development, eliza-postgres for container environments
+    const isContainer =
+      process.env.CONTAINER === 'true' ||
+      process.env.AGENT_CONTAINER === 'true' ||
+      process.env.DOCKER_CONTAINER === 'true' ||
+      fs.existsSync('/.dockerenv');
+    const postgresHost = isContainer ? 'eliza-postgres:5432' : 'localhost:5432';
+    const fallbackDatabaseUrl = `postgresql://eliza:eliza_secure_pass@${postgresHost}/eliza`;
+    
+    databaseUrl = envDatabaseUrl || fallbackDatabaseUrl;
+  } else {
+    // Use PGLite (embedded database)
+    const pgliteDir = path.join(process.cwd(), '.eliza', '.elizadb');
+    databaseUrl = `file:${pgliteDir}`;
+    
+    // Set PGLite environment variables
+    process.env.PGLITE_DATA_DIR = pgliteDir;
+    process.env.PGLITE_DIR = pgliteDir;
+  }
   const _dataDir = path.resolve(process.cwd(), 'data');
 
   // Create and initialize server
@@ -248,7 +269,8 @@ export async function startServer() {
     return runtime;
   };
 
-  console.log(`[BACKEND] Using PostgreSQL database ${databaseUrl}`);
+  const dbType = usePostgresql && !disablePglite ? 'PostgreSQL' : 'PGLite';
+  console.log(`[BACKEND] Using ${dbType} database: ${databaseUrl}`);
 
   // In containers, retry initialization to wait for PostgreSQL
   const maxRetries = 30; // 30 seconds total

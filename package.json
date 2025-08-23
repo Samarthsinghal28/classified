@@ -59,15 +59,25 @@
     "@elizaos/core": "workspace:*"
   },
   "trustedDependencies": [
+    "@elizaos/plugin-ollama",
+    "@elizaos/plugin-stagehand",
+    "@parcel/watcher",
     "@swc/core",
+    "@tailwindcss/oxide",
+    "aws-sdk",
     "bigint-buffer",
     "bufferutil",
     "bun",
     "canvas",
+    "core-js",
+    "cypress",
     "esbuild",
     "node-llama-cpp",
+    "nx",
     "protobufjs",
     "sharp",
+    "tesseract.js",
+    "unrs-resolver",
     "utf-8-validate"
   ],
   "dependencies": {

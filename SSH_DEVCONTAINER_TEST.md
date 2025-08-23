@@ -26,11 +26,13 @@ The `.devcontainer/devcontainer.json` file contains:
 ## Testing Process
 
 ### Step 1: Baseline Test (DONE)
+
 ```bash
 ./test-ssh-devcontainer.sh
 ```
 
 **Current Baseline Results:**
+
 - ✅ SSH connection active (`::1 49306 ::1 2222`)
 - ✅ User: `codespace`
 - ✅ SSH service running
@@ -41,25 +43,32 @@ The `.devcontainer/devcontainer.json` file contains:
 - ❌ Bun not installed (expected)
 
 ### Step 2: Rebuild Container
+
 **In VS Code Command Palette (`Ctrl+Shift+P`):**
+
 ```
 > Dev Containers: Rebuild Container
 ```
 
 ### Step 3: Post-Rebuild Verification
+
 After rebuild, SSH back in and run:
+
 ```bash
 ./test-ssh-devcontainer.sh
 ```
 
 **Expected Results:**
+
 - ✅ SSH should still work
 - ✅ User should still be `codespace`
 - ✅ Workspace should still be accessible
 - ✅ Basic tools should still work
 
 ### Step 4: If Successful, Add Dependencies
+
 Only if SSH is preserved, we'll add:
+
 - PostgreSQL (via docker-compose sidecar)
 - Bun installation
 - Rust/Cargo
@@ -70,17 +79,20 @@ Only if SSH is preserved, we'll add:
 ### If SSH Breaks After Rebuild
 
 **Symptoms:**
+
 - Cannot SSH into the Codespace
 - Connection refused or timeout
 - User changed or permissions lost
 
 **Possible Causes:**
+
 1. **User Mismatch**: Container created different user than `codespace`
 2. **SSH Daemon**: SSH service not running in container
 3. **Port Conflicts**: Port 22 not properly forwarded
 4. **Permission Issues**: Home directory or SSH keys not accessible
 
 **Solutions:**
+
 1. Check the devcontainer logs in VS Code
 2. Try accessing via VS Code web interface
 3. Modify `.devcontainer/devcontainer.json` to be even more minimal
