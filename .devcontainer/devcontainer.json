@@ -14,7 +14,13 @@
     "ghcr.io/devcontainers/features/sshd:1": {
       "version": "latest"
     },
-    "ghcr.io/devcontainers/features/github-cli:1": {}
+    "ghcr.io/devcontainers/features/github-cli:1": {},
+    "ghcr.io/devcontainers/features/postgres:1": {
+      "version": "16",
+      "database": "eliza",
+      "user": "eliza",
+      "password": "eliza_secure_pass"
+    }
   },
   "forwardPorts": [2222, 5432, 7777, 5173],
   "portsAttributes": {
@@ -45,5 +51,5 @@
   "remoteUser": "codespace",
   "containerUser": "codespace",
   "updateRemoteUserUID": false,
-  "postCreateCommand": "sudo service postgresql start && sudo -u postgres psql -c \"CREATE ROLE eliza WITH LOGIN PASSWORD 'eliza_secure_pass' CREATEDB;\" && sudo -u postgres psql -c \"CREATE DATABASE eliza OWNER eliza;\" && sudo -u postgres psql -d eliza -c \"CREATE EXTENSION IF NOT EXISTS \\\"uuid-ossp\\\";\" && sudo -u postgres psql -d eliza -c \"CREATE EXTENSION IF NOT EXISTS \\\"pg_trgm\\\";\" || true"
+  "postCreateCommand": "echo '✅ Codespace ready: Postgres + Bun + ElizaOS!'"
 }
