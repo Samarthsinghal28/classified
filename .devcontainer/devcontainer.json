@@ -1,6 +1,8 @@
 {
   "name": "ElizaOS - SSH Preserved",
-  "image": "mcr.microsoft.com/devcontainers/base:ubuntu",
+  "dockerComposeFile": "docker-compose.yml",
+  "service": "app",
+  "workspaceFolder": "/workspace",
   "features": {
     "ghcr.io/devcontainers/features/common-utils:2": {
       "installZsh": false,
@@ -14,36 +16,25 @@
     "ghcr.io/devcontainers/features/sshd:1": {
       "version": "latest"
     },
-    "ghcr.io/devcontainers/features/github-cli:1": {}
+    "ghcr.io/devcontainers/features/github-cli:1": {},
+    "ghcr.io/devcontainers/features/docker-in-docker:2": {
+      "version": "latest",
+      "moby": true
+    }
   },
   "forwardPorts": [2222, 5432, 7777, 5173],
   "portsAttributes": {
-    "2222": {
-      "label": "SSH Server",
-      "onAutoForward": "notify"
-    },
-    "5432": {
-      "label": "PostgreSQL",
-      "onAutoForward": "notify"
-    },
-    "7777": {
-      "label": "AgentServer API",
-      "onAutoForward": "notify"
-    },
-    "5173": {
-      "label": "Game Frontend",
-      "onAutoForward": "notify"
-    }
+    "2222": { "label": "SSH Server", "onAutoForward": "notify" },
+    "5432": { "label": "PostgreSQL", "onAutoForward": "notify" },
+    "7777": { "label": "AgentServer API", "onAutoForward": "notify" },
+    "5173": { "label": "Game Frontend", "onAutoForward": "notify" }
   },
   "customizations": {
     "vscode": {
-      "extensions": [
-        "ms-ossdata.vscode-postgresql"
-      ]
+      "extensions": ["ms-ossdata.vscode-postgresql", "ms-azuretools.vscode-docker"]
     }
   },
   "remoteUser": "codespace",
-  "containerUser": "codespace",
-  "updateRemoteUserUID": false,
-  "postCreateCommand": "echo 'SSH-enabled devcontainer created successfully!'"
+  "postCreateCommand": "echo 'Codespaces ✅'"
+
 }
